@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#53b9e8">
+  <title>¡Feliz cumpleaños! Sobreviviste otro año</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="logo" href="#inicio">🎂 <span>OTRO AÑO, OTRA VELA</span></a><button id="music" class="music" aria-pressed="false">♫ <span>Activar música</span></button></header>
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-copy"><p class="kicker">✦ HOY TOCA FINGIR QUE TE GUSTA ENVEJECER ✦</p><h1>¡Feliz<br><span>cumpleaños!</span><br>Sigues aquí.</h1><p class="lead">Un año más viejo y, según tus decisiones recientes, quizá no más sabio. Pero hay pastel, así que no todo está perdido.</p><a class="btn primary" href="#misiones">Empezar la fiesta <b>↓</b></a></div>
+      <div class="hero-art" aria-label="Pastel de cumpleaños estilo videojuego"><span class="pixel p1">✦</span><span class="pixel p2">★</span><span class="pixel p3">✧</span><div class="badge">PLAYER<br><strong>01</strong></div><div class="cake"><div class="flames" id="flames" aria-hidden="true"><i></i><i></i><i></i></div><div class="candles"><i></i><i></i><i></i></div><div class="frosting">★　✦　★</div><div class="tier top"></div><div class="tier bottom"></div><div class="plate"></div></div><div class="loot">🎁 BONUS: ¡PASTEL!</div></div>
+      <a class="scroll" href="#misiones">DESLIZA PARA JUGAR <span>⌄</span></a>
+    </section>
+
+    <section class="missions section" id="misiones"><p class="kicker">TRES RETOS. CERO GARANTÍAS.</p><h2>¿Listo para <span>hacer lo mínimo?</span></h2><p class="sub">Completa estas misiones. No mejorarán tu vida, pero al menos hay botones.</p>
+      <div class="cards">
+        <article class="card"><div class="icon">🕯️</div><span class="tag">MISIÓN 01</span><h3>Pide un deseo</h3><p>Sopla las velas. La ciencia no promete nada, pero la tradición insiste.</p><button class="btn task" data-task="wish">Deseo pedido</button></article>
+        <article class="card"><div class="icon">🎁</div><span class="tag">MISIÓN 02</span><h3>Abre el regalo</h3><p>La sorpresa podría ser genial. O necesitar pilas. Averígualo.</p><button class="btn task" data-task="gift">Abrir regalo</button><p class="gift-reveal" id="giftReveal" hidden>🎉 ¡Sorpresa! Un año más de aventuras, pastel y decisiones que luego contarás como anécdotas.</p></article>
+        <article class="card"><div class="icon">🕺</div><span class="tag">MISIÓN 03</span><h3>Sal a bailar</h3><p>Activa la música y demuestra que la vergüenza también sabe bailar.</p><button class="btn task" data-task="dance">¡A bailar!</button></article>
+      </div>
+      <p class="progress-label" id="progressLabel">Progreso: 0 / 3 misiones</p><div class="track"><div id="progress"></div></div><div id="victory" class="victory" hidden>🏆 ¡VICTORIA! Completaste las misiones. El premio: seguir siendo tú, pero con más pastel. 🎉</div>
+    </section>
+
+    <section class="toolbox section" id="utilidades">
+      <p class="kicker">HERRAMIENTAS DE DUDOSA UTILIDAD</p>
+      <h2>¡Más <span>decisiones cuestionables!</span></h2>
+      <p class="sub">Extras de cumpleaños. No arreglan nada, pero combinan con el pastel.</p>
+      <div class="utility-grid">
+        <button class="utility-button" id="quoteTool">🎲 Sarcasmo al azar</button>
+        <button class="utility-button" id="inviteTool">💌 Preparar invitación</button>
+        <button class="utility-button" id="photoTool">🖼️ Abrir foto sorpresa</button>
+        <button class="utility-button" id="candleTool" aria-pressed="false">🕯️ Apagar velas</button>
+        <button class="utility-button" id="resetTool">↻ Reiniciar misiones</button>
+      </div>
+      <p class="utility-output" id="utilityOutput" aria-live="polite" hidden></p>
+    </section>
+
+    <section class="message section"><div class="message-card"><div class="controller">🎂</div><div><p class="kicker">MENSAJE INESPERADAMENTE SINCERO</p><h2>Hoy el protagonista <span>eres tú.</span></h2><p>Que tengas amigos que te quieran, risas que no den vergüenza y suficiente pastel para ignorar por un rato el paso del tiempo.</p><button id="surprise" class="btn primary">Desbloquear otra broma ✨</button><p id="bonus" aria-live="polite"></p></div></div></section>
+  </main>
+  <footer>Att. Monica Morales <span>¡Felicidades! La edad es solo un número. Uno bastante específico.</span></footer>
+  <dialog class="photo-dialog" id="photoDialog" aria-labelledby="photoTitle">
+    <div class="photo-dialog-content">
+      <button class="photo-close" id="closePhoto" type="button" aria-label="Cerrar foto">×</button>
+      <p class="kicker" id="photoTitle">FOTO SORPRESA (SÍ, EXISTE)</p>
+      <img id="surprisePhoto" src="cumple.jpeg" alt="Foto sorpresa de cumpleaños">
+      <p class="photo-error" id="photoError" hidden>No se pudo abrir la imagen. Comprueba que exista cumple.jpeg junto a index.html.</p>
+    </div>
+  </dialog>
+  <audio id="song" src="ramones.mp3" loop preload="auto"></audio><div id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const song=document.querySelector('#song');
+    const music=document.querySelector('#music');
+    const taskButtons=[...document.querySelectorAll('[data-task]')];
+    const progressLabel=document.querySelector('#progressLabel');
+    const progress=document.querySelector('#progress');
+    const victory=document.querySelector('#victory');
+    const giftReveal=document.querySelector('#giftReveal');
+    const utilityOutput=document.querySelector('#utilityOutput');
+    const photoDialog=document.querySelector('#photoDialog');
+    const surprisePhoto=document.querySelector('#surprisePhoto');
+    const photoError=document.querySelector('#photoError');
+    const done=new Set();
+    const taskLines={
+      wish:'¡Deseo lanzado! El universo ya tiene otro pendiente. 🌠',
+      gift:'¡Regalo abierto! No se puede devolver un cumpleaños, así que disfrútalo. 🎁',
+      dance:'¡Reto aceptado! Tus rodillas también recibieron la invitación. 🕺'
+    };
+    let toastTimer;
+
+    function toast(message){
+      const element=document.querySelector('#toast');
+      element.textContent=message;
+      element.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer=setTimeout(()=>element.classList.remove('show'),3500);
+    }
+
+    function showUtility(message){
+      utilityOutput.textContent=message;
+      utilityOutput.hidden=false;
+    }
+
+    function openPhoto(){
+      photoDialog.showModal();
+    }
+
+    async function toggleMusic(){
+      if(song.paused){
+        try{
+          await song.play();
+          music.setAttribute('aria-pressed','true');
+          music.querySelector('span').textContent='Pausar música';
+        }catch{
+          toast('No se pudo reproducir ramones.mp3. Comprueba que el archivo esté junto a index.html.');
+        }
+      }else{
+        song.pause();
+        music.setAttribute('aria-pressed','false');
+        music.querySelector('span').textContent='Activar música';
+      }
+    }
+
+    function updateProgress(){
+      progressLabel.textContent=`Progreso: ${done.size} / ${taskButtons.length} misiones`;
+      progress.style.width=`${done.size*100/taskButtons.length}%`;
+      victory.hidden=done.size!==taskButtons.length;
+    }
+
+    function resetMissions(){
+      done.clear();
+      taskButtons.forEach(button=>{
+        button.disabled=false;
+        button.classList.remove('complete');
+        button.textContent=button.dataset.task==='gift'?'Abrir regalo':
+          button.dataset.task==='wish'?'Deseo pedido':'¡A bailar!';
+      });
+      giftReveal.hidden=true;
+      updateProgress();
+      toast('Misiones reiniciadas. ¡Puedes jugar otra vez!');
+    }
+
+    music.addEventListener('click',toggleMusic);
+    taskButtons.forEach(button=>button.addEventListener('click',async()=>{
+      const task=button.dataset.task;
+      if(task==='dance'&&song.paused)await toggleMusic();
+      if(done.has(task))return;
+      done.add(task);
+      button.disabled=true;
+      button.classList.add('complete');
+      button.textContent='¡Completada! ✓';
+      if(task==='gift')giftReveal.hidden=false;
+      updateProgress();
+      toast(taskLines[task]);
+    }));
+
+    const birthdayPhrases=[
+      '¡Feliz cumpleaños! Hoy puedes hacer lo que quieras… dentro de lo razonable. No te emociones.',
+      'Un año más sabio, dicen. Seguimos esperando pruebas. ¡Felicidades!',
+      'La edad es solo un número. Uno que ahora quizá necesites anotar.',
+      'Hoy eres el protagonista. Mañana vuelve el grupo de mensajes sin responder.',
+      'Que te den muchos regalos y que nadie pregunte cuánto costaron.',
+      'Otro año de experiencia y decisiones que llamaremos “anécdotas”.',
+      'Que tus deseos se hagan realidad. Empecemos por los que no requieren presupuesto.',
+      'Hoy no cuentas calorías. Mañana puedes fingir que tampoco.',
+      'Ya tienes edad para saber mejor. Qué pena que eso nunca haya detenido a nadie.',
+      'Disfruta el pastel: es el único de la fiesta que no juzga.'
+    ];
+    const invitation='¡Ven a celebrar mi cumpleaños! 🎉 Habrá pastel, risas y una negación colectiva del paso del tiempo. 🍰';
+
+    document.querySelector('#quoteTool').addEventListener('click',()=>{
+      showUtility(birthdayPhrases[Math.floor(Math.random()*birthdayPhrases.length)]);
+    });
+    document.querySelector('#inviteTool').addEventListener('click',async()=>{
+      showUtility(invitation);
+      if(navigator.share){
+        try{
+          await navigator.share({text:invitation});
+        }catch(error){
+          if(error.name!=='AbortError')toast('La invitación está lista para copiar desde el mensaje.');
+        }
+      }else if(navigator.clipboard&&navigator.clipboard.writeText){
+        try{
+          await navigator.clipboard.writeText(invitation);
+          toast('¡Invitación copiada! Ya puedes compartirla.');
+        }catch{
+          toast('La invitación está lista para copiar desde el mensaje.');
+        }
+      }else{
+        toast('La invitación está lista para copiar desde el mensaje.');
+      }
+    });
+    document.querySelector('#photoTool').addEventListener('click',openPhoto);
+    document.querySelector('#closePhoto').addEventListener('click',()=>photoDialog.close());
+    surprisePhoto.addEventListener('error',()=>{
+      surprisePhoto.hidden=true;
+      photoError.hidden=false;
+      toast('No se pudo abrir cumple.jpeg. Comprueba que esté junto a index.html.');
+    });
+    document.querySelector('#candleTool').addEventListener('click',event=>{
+      const button=event.currentTarget;
+      const flames=document.querySelector('#flames');
+      flames.hidden=!flames.hidden;
+      button.setAttribute('aria-pressed',String(flames.hidden));
+      button.textContent=flames.hidden?'🔥 Encender velas':'🕯️ Apagar velas';
+      toast(flames.hidden?'¡Deseo pedido!':'¡Las velas están encendidas!');
+    });
+    document.querySelector('#resetTool').addEventListener('click',resetMissions);
+    document.querySelector('#surprise').addEventListener('click',()=>{
+      document.querySelector('#bonus').textContent=birthdayPhrases[Math.floor(Math.random()*birthdayPhrases.length)];
+      openPhoto();
+      const colors=['#5bc8ed','#ffd632','#e84e4e','#85cb60'];
+      for(let index=0;index<36;index++){
+        const confetti=document.createElement('i');
+        confetti.className='confetti';
+        confetti.style.left=Math.random()*100+'vw';
+        confetti.style.setProperty('--drift',(Math.random()-.5)*200+'px');
+        confetti.style.background=colors[index%colors.length];
+        document.body.append(confetti);
+        setTimeout(()=>confetti.remove(),3500);
+      }
+    });
+  </script>
+</body>
+</html>
